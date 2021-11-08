@@ -54,7 +54,7 @@ class Pig
         if($result) {
             printf(" \n");
         } else {
-            printf("Continuing... \n");
+            printf("Next player... \n");
         }
     }
 
@@ -68,19 +68,23 @@ class Pig
 
         if ($score1 === 1 || $score2 === 1) {
             $this->setRoundTotal(0);
-	        if ($score1 === 1 && $score2 === 1) {
+            if ($score1 === 1 && $score2 === 1) {
                 $this->setGameTotal(0);
             } 
         } else {
             $this->setRoundTotal($this->getRoundTotal() + $score1 + $score2);
             $this->setGameTotal($this->getGameTotal() + $score1 + $score2);
+            /* IF GAME TOTAL REACHES 100 GAME IS WON */
+            if ($this->getGameTotal() > 99) {
+                $this->gameOver($this->getPlayerId(), $this->getRoundTotal(), $this->getGameTotal());
+            }
         }
 
-	    printf("[%d] [%d]\nScore: %d\n", $score1, $score2, $this->getRoundTotal());
-	    if ($this->getRoundTotal() === 0) {
-	        printf("\nZero - you lost: [%d] [%d]\nScore: %d\n\n", $score1, $score2, $this->getRoundTotal());
-	        return false;
-    	}
+        printf("[%d] [%d]\nScore: %d GameScore: %d\n", $score1, $score2, $this->getRoundTotal(), $this->getGameTotal());
+        if ($this->getRoundTotal() === 0) {
+            printf("\nZero - you lost: [%d] [%d]\nScore: %d GameScore: %d\n\n", $score1, $score2, $this->getRoundTotal(), $this->getGameTotal());
+            return false;
+        }
 
         echo "Play. Type 'y' to continue, or any other key to stop.";
         $handle = fopen ("php://stdin","r");
@@ -93,7 +97,7 @@ class Pig
             if ($this->getRoundTotal() === 0) { 
                 return false;
             } else {
-                    return true;
+                return true;
             }
         }
 
@@ -103,7 +107,13 @@ class Pig
             return true;
         }
     }
+
+    protected function gameOver($id) {
+        $message = sprintf("Game over\n\nThe winner is \n\n***Player %d***\n\n Yaaaay!!! \n\nRound total: [%d]\nGame total[%d]\n", $id, $this->getRoundTotal(), $this->getGameTotal());
+        die($message);
+    }
 }
+
 
 /* Start the game */
 $players = 0;
@@ -145,16 +155,28 @@ for ($i = 1; $i < $players + 1; $i++) {
     $pigs[$i] = new Pig($i);
 }
 
-/* Each player takes a turn */
-foreach ($pigs as $pig) {
-    printf("Player %d\n", $pig->getPlayerId());
-    echo "Throw or stop?  Type 'y' to continue: ";
-    $handle = fopen ("php://stdin","r");
-    $line = fgets($handle);
-    if(trim($line) != 'y'){
-        printf("Stopping at: %d\n");
-    } else {
-        $pig->play();
+/* Here we need to set up a game for the number of Players, and continue  */
+/* it until everyone has either zeroed or someone has reached 100         */
+
+$gameNotWon = true;
+
+while($gameNotWon) {
+    /* Each player takes a turn */
+    foreach ($pigs as $pig) {
+        if ($pig->getGameTotal() > 99) {
+            $gameNotWon = false;
+        printf("Game has been won by player %d\n", $pig->getPlayerId());
+        }
+
+        printf("\n--------\nPlayer %d\n--------\n", $pig->getPlayerId());
+        echo "Throw or stop?  Type 'y' to continue: ";
+        $handle = fopen ("php://stdin","r");
+        $line = fgets($handle);
+        if(trim($line) != 'y'){
+            printf("Stopping at: round: %d game: %d\n", $pig->getRoundTotal(), $pig->getGameTotal());
+        } else {
+            $pig->play();
+        }
     }
 }
 
