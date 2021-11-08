@@ -105,11 +105,13 @@ class Pig
     }
 }
 
+/* Start the game */
 $players = 0;
 printf("%s\n%s\n", 'Kurt Geiger Pig Game by D. Smith, 2021-Nov-08', 'Enter number of players 1 to 4: ');
 $handle = fopen ("php://stdin","r");
 $line = fgets($handle);
 
+/* Ask how many players are playing - between 1 and 4 */
 if ($x = in_array(trim($line), [1,2,3,4])) {
     $players = (int) trim($line);
 } else {
@@ -123,6 +125,7 @@ if ($players > 1) {
     printf("%d player\n", $players);
 }
 
+/* Start playing */
 echo "Ready to play... type 'y' to continue: ";
 $handle = fopen ("php://stdin","r");
 $line = fgets($handle);
@@ -142,6 +145,7 @@ for ($i = 1; $i < $players + 1; $i++) {
     $pigs[$i] = new Pig($i);
 }
 
+/* Each player takes a turn */
 foreach ($pigs as $pig) {
     printf("Player %d\n", $pig->getPlayerId());
     echo "Throw or stop?  Type 'y' to continue: ";
@@ -154,6 +158,7 @@ foreach ($pigs as $pig) {
     }
 }
 
+/* At the end of the game we look at the scores */
 $max = ['player' => 0, 'score' => 0];
 
 foreach ($pigs as $pig) {
@@ -163,6 +168,7 @@ foreach ($pigs as $pig) {
     printf("Player %d game total: %d\n", $pig->getPlayerId(), $pig->getGameTotal());
 }
 
+/* The case when no one wins */
 if ($max['score'] === 0) {
     echo "No winner - all zeroes\nBetter luck next time!\n";
 } else {
