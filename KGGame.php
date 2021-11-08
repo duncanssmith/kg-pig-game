@@ -33,7 +33,7 @@ class Pig
     }
 
     /**
-     * constructor$
+     * constructor
      */
     public function __construct(int $playerId) {
         $this->setPlayerId($playerId);
@@ -76,7 +76,7 @@ class Pig
             $this->setGameTotal($this->getGameTotal() + $score1 + $score2);
         }
 
-	    printf("Throw: [%d] [%d]\nScore: %d\n", $score1, $score2, $this->getRoundTotal());
+	    printf("[%d] [%d]\nScore: %d\n", $score1, $score2, $this->getRoundTotal());
 	    if ($this->getRoundTotal() === 0) {
 	        printf("\nZero - you lost: [%d] [%d]\nScore: %d\n\n", $score1, $score2, $this->getRoundTotal());
 	        return false;
@@ -87,7 +87,7 @@ class Pig
         $line = fgets($handle);
 
         if(trim($line) != 'y'){
-            echo "Stopped\n";
+            echo "End of Player " .$this->getPlayerId() . "'s turn\n";
         } else {
             $success = $this->startGame();
             if ($this->getRoundTotal() === 0) { 
