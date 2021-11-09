@@ -6,7 +6,7 @@ Duncan Smith - Kurt Geiger Sofware Engineering Test
 How to Play:
 ------------
 
-To play the game run on a computer with PHP > version 7 installed.
+To play the game run on a computer with PHP5 or later installed.
 
 Make sure the file KGGame.php is set to executable by all:
 

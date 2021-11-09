@@ -179,20 +179,3 @@ while($gameNotWon) {
         }
     }
 }
-
-/* At the end of the game we look at the scores */
-$max = ['player' => 0, 'score' => 0];
-
-foreach ($pigs as $pig) {
-    $max['player'] = $pig->getRoundTotal() > $max['score'] ? $pig->getPlayerId() : $max['player'];
-    $max['score'] = $pig->getRoundTotal() > $max['score'] ? $pig->getRoundTotal() : $max['score'];
-    printf("Player %d scored: %d\n", $pig->getPlayerId(), $pig->getRoundTotal());
-    printf("Player %d game total: %d\n", $pig->getPlayerId(), $pig->getGameTotal());
-}
-
-/* The case when no one wins */
-if ($max['score'] === 0) {
-    echo "No winner - all zeroes\nBetter luck next time!\n";
-} else {
-    echo "Player " . $max['player'] . " won with " . $max['score'] . " points\n";
-}
