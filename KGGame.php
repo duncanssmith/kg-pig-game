@@ -39,6 +39,13 @@ class Pig
         $this->setPlayerId($playerId);
     }
 
+    /**
+     * Throw a die and get an integer from 1 to 6
+     *
+     * @param int $min
+     * @param int $max
+     * @return int
+     */
     protected function throwDie($min, $max) {
         $score = mt_rand($min, $max);
 
@@ -46,7 +53,9 @@ class Pig
     }
 
     /**
-     * @throws Exception
+     * Start playing Pig
+     *
+     * @return void
      */
     public function play() {
         $result = $this->startGame();
@@ -59,7 +68,9 @@ class Pig
     }
 
     /**
+     * Start the game
      *
+     * @return void
      */
     protected function startGame() {
         // init vars
@@ -70,7 +81,7 @@ class Pig
             $this->setRoundTotal(0);
             if ($score1 === 1 && $score2 === 1) {
                 $this->setGameTotal(0);
-            } 
+            }
         } else {
             $this->setRoundTotal($this->getRoundTotal() + $score1 + $score2);
             $this->setGameTotal($this->getGameTotal() + $score1 + $score2);
@@ -94,7 +105,7 @@ class Pig
             echo "End of Player " .$this->getPlayerId() . "'s turn\n";
         } else {
             $success = $this->startGame();
-            if ($this->getRoundTotal() === 0) { 
+            if ($this->getRoundTotal() === 0) {
                 return false;
             } else {
                 return true;
@@ -108,12 +119,17 @@ class Pig
         }
     }
 
+    /**
+     * Exit the program with a message when a player has won
+     *
+     * @param [type] $id
+     * @return void
+     */
     protected function gameOver($id) {
         $message = sprintf("Game over\n\nThe winner is \n\n***Player %d***\n\n Yaaaay!!! \n\nRound total: [%d]\nGame total[%d]\n", $id, $this->getRoundTotal(), $this->getGameTotal());
         die($message);
     }
 }
-
 
 /* Start the game */
 $players = 0;
@@ -146,7 +162,7 @@ if(trim($line) != 'y'){
 }
 
 fclose($handle);
-echo "\n"; 
+echo "\n";
 echo "Starting...\n";
 
 $pigs = [];
@@ -160,12 +176,13 @@ for ($i = 1; $i < $players + 1; $i++) {
 
 $gameNotWon = true;
 
+/* The game continues until one player reaches a score of 100 or more */
 while($gameNotWon) {
     /* Each player takes a turn */
     foreach ($pigs as $pig) {
         if ($pig->getGameTotal() > 99) {
             $gameNotWon = false;
-        printf("Game has been won by player %d\n", $pig->getPlayerId());
+            printf("Game has been won by player %d\n", $pig->getPlayerId());
         }
 
         printf("\n--------\nPlayer %d\n--------\n", $pig->getPlayerId());
